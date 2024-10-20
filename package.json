@@ -1,0 +1,29 @@
+{
+	"name": "chappy",
+	"version": "1.0.0",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"build-and-run": "tsc && node dist/server.js",
+		"server": "rm -rf ./dist && tsc && node dist/server.js",
+		"build": "tsc",
+		"clean": "rm -rf ./dist",
+		"start": "node dist/server.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^16.4.5",
+		"express": "^4.21.0",
+		"joi": "^17.13.3",
+		"mongodb": "^6.9.0"
+	},
+	"devDependencies": {
+		"@types/cors": "^2.8.17",
+		"@types/express": "^4.17.21",
+		"typescript": "^5.6.2"
+	}
+}
