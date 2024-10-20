@@ -20,6 +20,11 @@ const defaultLogLevels: { [key: string]: LogLevel } = {
 	warn: { name: "WARN", color: COLOR_ORANGE, logFunction: console.warn },
 	error: { name: "ERROR", color: COLOR_RED, logFunction: console.error },
 	debug: { name: "DEBUG", color: COLOR_BLUE, logFunction: console.debug },
+	success: {
+		name: "SUCCESS",
+		color: COLOR_GREEN,
+		logFunction: console.debug,
+	},
 };
 
 let customLogLevels: { [key: string]: LogLevel } = {};

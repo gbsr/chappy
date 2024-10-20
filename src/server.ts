@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 // import { productRouter } from "./routes/productRouter.js";
-// import { userRouter } from "./routes/userRouter.js";
+import { userRouter } from "./routes/userRouter.js";
 // import { cartRouter } from "./routes/cartRouter.js";
 import { logWithLocation } from "./helpers.js";
 import { connect, client } from "./data/dbConnection.js";
@@ -34,14 +34,20 @@ app.get("/", (req, res) => {
 */
 
 // Routes
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
 	res.status(200);
 	res.status(200).send("Server is running");
 	logWithLocation(`Server status: ${res.statusCode}`, "success");
 });
 
+// app.get("/api", (req, res) => {
+// 	res.status(200);
+// 	res.status(200).send("API online");
+// 	logWithLocation(`API is online.`);
+// });
+
 // app.use("/products", productRouter);
-// app.use("/users", userRouter);
+app.use("/api/users", userRouter);
 // app.use("/cart", cartRouter);
 
 /**
