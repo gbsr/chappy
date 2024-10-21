@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { Response } from "express";
 import { Collection } from "mongodb";
 import { User } from "../../data/interface/user.js";
 import { logWithLocation } from "../../helpers.js";
@@ -16,7 +16,6 @@ import { logWithLocation } from "../../helpers.js";
  * code of 500 along with an error message.
  */
 export const getAllUsers = async (
-	req: Request,
 	res: Response,
 	collection: Collection<User>
 ) => {

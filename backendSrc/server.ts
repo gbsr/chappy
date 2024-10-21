@@ -1,10 +1,10 @@
 import "dotenv/config";
 import express from "express";
 // import { productRouter } from "./routes/productRouter.js";
-import { userRouter } from "./routes/userRouter.js";
+import { userRouter } from "../src/routes/userRouter.js";
 // import { cartRouter } from "./routes/cartRouter.js";
-import { logWithLocation } from "./helpers.js";
-import { connect, client } from "./data/dbConnection.js";
+import { logWithLocation } from "../src/helpers.js";
+import { connect, client } from "../src/data/dbConnection.js";
 import cors from "cors";
 
 // This Express.js application sets up a server with middleware for JSON parsing and CORS support.
@@ -34,7 +34,7 @@ app.get("/", (req, res) => {
 */
 
 // Routes
-app.get("/api", (req, res) => {
+app.get("/api", (_req, res) => {
 	res.status(200);
 	res.status(200).send("Server is running");
 	logWithLocation(`Server status: ${res.statusCode}`, "success");
@@ -59,11 +59,17 @@ app.use("/api/users", userRouter);
  */
 async function startServer() {
 	try {
+		logWithLocation(`Attempting to connect to the database...`, "info");
 		await connect();
+		logWithLocation(
+			"Database connection successful. Starting server...",
+			"success"
+		);
 		app.listen(port, () => {
 			logWithLocation(`Server is running on port ${port}`, "success");
 		});
 	} catch (error) {
+		console.error("Detailed error in startServer:", error);
 		logWithLocation(`Failed to start server: ${error}`, "error");
 		await client.close();
 		process.exit(1);
