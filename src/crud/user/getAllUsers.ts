@@ -27,6 +27,7 @@ export const getAllUsers = async (
 		logWithLocation(`${res.statusCode}`, "server");
 
 		res.status(200).json(users);
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	} catch (error: any) {
 		logWithLocation(`Error fetching users: ${error.message}`, "error");
 		res.status(500);
