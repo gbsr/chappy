@@ -1,6 +1,6 @@
 import "dotenv/config";
 import express from "express";
-// import { productRouter } from "./routes/productRouter.js";
+import { channelRouter } from "../src/routes/channelRouter.js";
 import { userRouter } from "../src/routes/userRouter.js";
 // import { cartRouter } from "./routes/cartRouter.js";
 import { logWithLocation } from "../src/helpers.js";
@@ -46,7 +46,7 @@ app.get("/api", (_req, res) => {
 // 	logWithLocation(`API is online.`);
 // });
 
-// app.use("/products", productRouter);
+app.use("/api/channels", channelRouter);
 app.use("/api/users", userRouter);
 // app.use("/cart", cartRouter);
 

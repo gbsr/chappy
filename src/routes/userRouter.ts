@@ -3,11 +3,7 @@ import { Collection } from "mongodb";
 import { User } from "../data/interface/user.js";
 import { db } from "../data/dbConnection.js";
 import { getAllUsers } from "../crud/user/getAllUsers.js";
-// import { getUser } from "../crud/users/getUser.js";
-// import { addUser } from "../crud/users/addUser.js";
-// import { updateUser } from "../crud/users/updateUser.js";
-// import { deleteUser } from "../crud/users/deleteUser.js";
-// import { searchUsers } from "../crud/search/searchUser.js";
+import { getUser } from "../crud/user/getUser.js";
 
 const userRouter = Router();
 let collection: Collection<User>;
@@ -25,15 +21,13 @@ userRouter.get("/search", async (_req: Request, res: Response) => {
 });
 
 // List all users
-userRouter.get("/", async (res: Response) => {
-	await getAllUsers(res, collection);
+userRouter.get("/", async (req: Request, res: Response) => {
+	await getAllUsers(req, res, collection);
 });
 
 // Get user by id
-userRouter.get("/:id", async (_req: Request, res: Response) => {
-	// const id = new ObjectId();
-	// await getUser(req, res, collection);
-	res.status(501).send("Not implemented");
+userRouter.get("/:id", async (req: Request, res: Response) => {
+	await getUser(req, res, collection);
 });
 
 // Add a new user

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Color codes
 export const COLOR_GREEN = "\x1b[32m";
 export const COLOR_ORANGE = "\x1b[38;5;208m";
@@ -27,7 +28,7 @@ const defaultLogLevels: { [key: string]: LogLevel } = {
 	},
 };
 
-let customLogLevels: { [key: string]: LogLevel } = {};
+const customLogLevels: { [key: string]: LogLevel } = {};
 
 function formatDate(date: Date): string {
 	const pad = (num: number, digits: number = 2) =>
@@ -76,7 +77,7 @@ export function logWithLocation(message: string, level: string = "info"): void {
 	const timestamp = formatDate(new Date());
 
 	logLevel.logFunction(
-		`${COLOR_GREEN}--- ${fileName}${COLOR_RESET}:${COLOR_ORANGE}${line},${COLOR_RESET} ${logLevel.color}${BOLD} *[${logLevel.name}]${COLOR_RESET} ${COLOR_BLUE}:${timestamp}:${COLOR_RESET}\n ${message}\n${COLOR_GREEN}--- \n`
+		`${logLevel.color}--- ${COLOR_RESET}${fileName}${COLOR_BLUE}:${COLOR_ORANGE}${line},${COLOR_RESET} *${logLevel.color}${BOLD} [${logLevel.name}]${COLOR_RESET} * ${COLOR_BLUE}:${timestamp}:${logLevel.color}\n --- ${message}\n${logLevel.color}--- \n`
 	);
 }
 
