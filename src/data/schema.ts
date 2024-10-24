@@ -16,10 +16,12 @@ export const channelSchema = Joi.object({
 });
 
 export const userSchema = Joi.object({
-	id: Joi.string().length(24).required(),
+	id: Joi.string().length(24),
 	userName: Joi.string().min(1).required(),
 	email: Joi.string().min(1).required(),
 	password: Joi.string().min(1).required(),
+	createdAt: Joi.date().required(),
+	updatedAt: Joi.date(),
 	isAdmin: Joi.boolean().required(),
 });
 

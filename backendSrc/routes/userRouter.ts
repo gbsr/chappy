@@ -4,6 +4,7 @@ import { User } from "../../src/data/interface/user.js";
 import { db } from "../../src/data/dbConnection.js";
 import { getAllUsers } from "../crud/user/getAllUsers.js";
 import { getUser } from "../crud/user/getUser.js";
+import { addUser } from "../crud/user/addUser.js";
 
 const userRouter = Router();
 let collection: Collection<User>;
@@ -14,7 +15,7 @@ userRouter.use((_req, _res, next) => {
 	next();
 });
 
-// Search user request query
+// Search user request query - NOT IMPLEMENTED
 userRouter.get("/search", async (_req: Request, res: Response) => {
 	// await searchUsers(req, res, collection);
 	res.status(501).send("Not implemented");
@@ -31,18 +32,17 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
 });
 
 // Add a new user
-userRouter.post("/", async (_req: Request, res: Response) => {
-	// await addUser(req, res, collection);
-	res.status(501).send("Not implemented");
+userRouter.post("/add", async (_req: Request, res: Response) => {
+	await addUser(_req, res, collection);
 });
 
-// Change user
+// Change user - NOT IMPLEMENTED
 userRouter.put("/:id", async (_req: Request, res: Response) => {
 	// await updateUser(req, res, collection);
 	res.status(501).send("Not implemented");
 });
 
-// Delete user
+// Delete user - NOT IMPLEMENTED
 userRouter.delete("/:id", async (_req: Request, res: Response) => {
 	// await deleteUser(req, res, collection);
 	res.status(501).send("Not implemented");
