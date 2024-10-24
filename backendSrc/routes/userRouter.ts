@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Collection } from "mongodb";
-import { User } from "../data/interface/user.js";
-import { db } from "../data/dbConnection.js";
+import { User } from "../../src/data/interface/user.js";
+import { db } from "../../src/data/dbConnection.js";
 import { getAllUsers } from "../crud/user/getAllUsers.js";
 import { getUser } from "../crud/user/getUser.js";
 

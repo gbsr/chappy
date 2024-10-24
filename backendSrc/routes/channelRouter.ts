@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Collection } from "mongodb";
-import { db } from "../data/dbConnection.js";
-import { Channel } from "../data/interface/channels.js";
+import { db } from "../../src/data/dbConnection.js";
+import { Channel } from "../../src/data/interface/channels.js";
 import { getAllChannels } from "../crud/channels/getAllChannels.js";
 
 const channelRouter = Router();

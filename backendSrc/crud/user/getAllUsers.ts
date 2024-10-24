@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Collection } from "mongodb";
-import { User } from "../../data/interface/user.js";
-import { logWithLocation } from "../../helpers.js";
+import { User } from "../../../src/data/interface/user.js";
+import { logWithLocation } from "../../../src/helpers.js";
 
 /**
  * Retrieves all users from the specified collection and sends the response to the client.

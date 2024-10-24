@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
-import { channelRouter } from "../src/routes/channelRouter.js";
-import { userRouter } from "../src/routes/userRouter.js";
+import { channelRouter } from "./routes/channelRouter.js";
+import { userRouter } from "./routes/userRouter.js";
 // import { cartRouter } from "./routes/cartRouter.js";
 import { logWithLocation } from "../src/helpers.js";
 import { connect, client } from "../src/data/dbConnection.js";
@@ -40,15 +40,9 @@ app.get("/api", (_req, res) => {
 	logWithLocation(`Server status: ${res.statusCode}`, "success");
 });
 
-// app.get("/api", (req, res) => {
-// 	res.status(200);
-// 	res.status(200).send("API online");
-// 	logWithLocation(`API is online.`);
-// });
-
 app.use("/api/channels", channelRouter);
 app.use("/api/users", userRouter);
-// app.use("/cart", cartRouter);
+// app.use("/messages", messageRouter);
 
 /**
  * Initializes and starts the server by establishing a connection.
