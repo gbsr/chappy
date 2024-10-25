@@ -1,8 +1,6 @@
 import Joi from "joi";
 
-// TODO: Update to reflect interfaces
 export const channelSchema = Joi.object({
-	id: Joi.string().length(24).required(), // objectid but joi uses string for this
 	channelName: Joi.string().required(),
 
 	desc: Joi.string(),
@@ -12,31 +10,29 @@ export const channelSchema = Joi.object({
 	members: Joi.array().items(Joi.string()).required(), // array of oid
 
 	createdAt: Joi.date(),
-	updatedAt: Joi.date(),
+	updatedAt: Joi.date().optional().allow(null),
 });
 
 export const userSchema = Joi.object({
-	id: Joi.string().length(24),
 	userName: Joi.string().min(1).required(),
 	email: Joi.string().min(1).required(),
 	password: Joi.string().min(1).required(),
 	createdAt: Joi.date().required(),
-	updatedAt: Joi.date(),
+	updatedAt: Joi.date().optional().allow(null),
 	isAdmin: Joi.boolean().required(),
 });
 
-export const messagetSchema = Joi.object({
-	id: Joi.string().hex().length(24).required(),
+export const messageSchema = Joi.object({
 	channelId: Joi.string().hex().length(24).required(),
 	userId: Joi.string().hex().length(24).required(),
 
-	recipientId: Joi.string().hex().length(24),
+	recipientId: Joi.string().hex().length(24).optional(),
 
 	content: Joi.string().min(1).required(),
 
-	taggedUsers: Joi.array().items(Joi.string().hex().length(24)),
+	taggedUsers: Joi.array().items(Joi.string().hex().length(24)).optional(),
 	createdAt: Joi.date(),
-	updatedAt: Joi.date(),
+	updatedAt: Joi.date().optional().allow(null),
 });
 
 export const idSchema = Joi.object({
