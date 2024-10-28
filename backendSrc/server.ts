@@ -2,7 +2,6 @@ import "dotenv/config";
 import express from "express";
 import { channelRouter } from "./routes/channelRouter.js";
 import { userRouter } from "./routes/userRouter.js";
-// import { cartRouter } from "./routes/cartRouter.js";
 import { logWithLocation } from "../src/helpers.js";
 import { connect, client } from "../src/data/dbConnection.js";
 import cors from "cors";
@@ -77,7 +76,7 @@ startServer();
 // closes the MongoDB connection, logs confirmation of the closure,
 // and then exits the process with a status code of 0.
 process.on("SIGINT", async () => {
-	console.log("Shutting down gracefully...");
+	console.log(" Shutting down gracefully...");
 	await client.close();
 	console.log("MongoDB connection closed.");
 	process.exit(0);

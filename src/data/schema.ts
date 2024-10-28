@@ -38,7 +38,3 @@ export const messageSchema = Joi.object({
 export const idSchema = Joi.object({
 	_id: Joi.string().hex().length(24).required(),
 });
-
-// export const deleteProductSchema = Joi.object({
-// 	id: Joi.string().required().length(24).hex(),
-// });

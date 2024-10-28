@@ -43,7 +43,8 @@ export const getUserProfile = async (
 			return res.json({ message: "User not authenticated" });
 		}
 
-		// Fetches a single user from the collection by their unique identifier (userId). The userId is converted into an ObjectId format before the query is executed.
+		// Fetches a single user from the collection by their unique identifier (userId).
+		// The userId is converted into an ObjectId format before the query is executed.
 		const user = await collection.findOne({ _id: new ObjectId(userId) });
 
 		if (!user) {
