@@ -10,7 +10,7 @@
 		"isolatedModules": true,
 		"moduleDetection": "force",
 		"noEmit": false,
-		"outDir": "./dist/src/backend",
+		"outDir": "./dist",
 
 		/* Linting */
 		"strict": true,

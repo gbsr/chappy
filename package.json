@@ -8,10 +8,10 @@
 		"build": "tsc -b && vite build",
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"backend": "tsc --project tsconfig.backend.json && node --env-file .env ./backendDist/server.js",
+		"backend": "tsc --project tsconfig.backend.json && node --env-file .env ./dist/backendSrc/server.js",
 		"build-backend": "tsc --project tsconfig.backend.json",
-		"start-backend": "node --env-file .env ./dist/src/backend/backendSrc/server.js",
-		"server": "tsc --project tsconfig.backend.json && node --env-file .env ./dist/src/backend/backendSrc/server.js"
+		"start-backend": "node --env-file .env ./backendSrc/server.js",
+		"server": "tsc --project tsconfig.backend.json && node --env-file .env ./dist/backendSrc/server.js"
 	},
 	"dependencies": {
 		"@types/bcrypt": "^5.0.2",
