@@ -3,6 +3,7 @@ import { logWithLocation } from "../../../src/helpers.js";
 import { userSchema } from "../../../src/data/schema.js";
 import { User } from "../../../src/data/interface/user";
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 /**
  * Checks if a user exists in the provided collection by their username or email.
@@ -34,19 +35,22 @@ async function checkUserExists(
 	return { exists: false };
 }
 
-/****
- * Adds a new user to the specified collection.
+/**
+ * Adds a new user to the specified collection after validating input data.
  *
- * This function extracts user details from the request body and validates them against a schema.
- * It checks if a user with the same username or email already exists in the collection. If the
- * provided data is invalid or a duplicate user is found, appropriate error responses are sent.
- *
- * @param {Request} req - The request object containing user details in the body.
+ * @param {Request} req - The request object containing user data in the body.
  * @param {Response} res - The response object used to send responses back to the client.
- * @param {Collection<User>} collection - The MongoDB collection where the user data will be stored.
+ * @param {Collection<User>} collection - The MongoDB collection where users are stored.
  *
- * The function includes a try/catch block to handle potential errors during user addition
- * and responds with a 500 status code and an error message if any error occurs.
+ * Process:
+ * - Validates the incoming user data against a Joi schema.
+ * - Checks if a user with the same username or email already exists.
+ * - Hashes the password before storing it in the database.
+ * - Responds with appropriate status codes and messages based on success or failure.
+ *
+ * Note:
+ * This function includes a try/catch block to handle potential errors that may occur during the user addition process,
+ * logging the error and returning a 500 status code if an exception is caught.
  */
 export const addUser = async (
 	req: Request,
@@ -87,11 +91,13 @@ export const addUser = async (
 			});
 		}
 
+		const hashedPassword = await bcrypt.hash(password, 10);
+
 		const user: User = {
 			_id: new ObjectId(),
 			userName,
 			email,
-			password,
+			password: hashedPassword,
 			createdAt,
 			updatedAt,
 			isAdmin,
