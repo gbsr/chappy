@@ -10,6 +10,7 @@ import { getAllUsers } from "../crud/user/getAllUsers.js";
 import { getUser } from "../crud/user/getUser.js";
 import { addUser } from "../crud/user/addUser.js";
 import { deleteUser } from "../crud/user/deleteUser.js";
+import { updateUser } from "../crud/user/updateUser.js";
 import { getUserProfile } from "../crud/user/getUserProfile.js";
 
 const userRouter = Router();
@@ -51,10 +52,9 @@ userRouter.get("/:id", async (req: Request, res: Response) => {
 	await getUser(req, res, collection);
 });
 
-// Change user - NOT IMPLEMENTED
-userRouter.put("/:id", async (_req: Request, res: Response) => {
-	// await updateUser(req, res, collection);
-	res.status(501).send("Not implemented");
+// Change user
+userRouter.put("/:id", async (req: Request, res: Response) => {
+	await updateUser(req, res, collection);
 });
 
 // Delete user
