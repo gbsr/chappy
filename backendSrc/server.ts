@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import { channelRouter } from "./routes/channelRouter.js";
 import { userRouter } from "./routes/userRouter.js";
+import { messageRouter } from "./routes/messageRouter.js";
 import { logWithLocation } from "../src/helpers.js";
 import { connect, client } from "../src/data/dbConnection.js";
 import cors from "cors";
@@ -41,7 +42,7 @@ app.get("/api", (_req, res) => {
 
 app.use("/api/channels", channelRouter);
 app.use("/api/users", userRouter);
-// app.use("/messages", messageRouter);
+app.use("/api", messageRouter);
 
 /**
  * Initializes and starts the server by establishing a connection.
