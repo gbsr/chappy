@@ -5,6 +5,7 @@ import { Channel } from "../../src/data/interface/channels.js";
 import { getAllChannels } from "../crud/channels/getAllChannels.js";
 import { addChannel } from "../crud/channels/addChannel.js";
 import { deleteChannel } from "../crud/channels/deleteChannel.js";
+import { updateChannel } from "../crud/channels/updateChannel.js";
 
 const channelRouter = Router();
 let collection: Collection<Channel>;
@@ -31,9 +32,8 @@ channelRouter.delete("/:id", async (req: Request, res: Response) => {
 });
 
 // update channel
-// channelRouter.post("/update/:id", async (req: Request, res: Response) => {
-// 	const id = req.params.id;
-// 	await updateChannel(req, res, collection, id);
-// });
+channelRouter.put("/:id", async (req: Request, res: Response) => {
+	await updateChannel(req, res, collection);
+});
 
 export { channelRouter };
