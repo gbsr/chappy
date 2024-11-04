@@ -17,7 +17,7 @@ export const userSchema = Joi.object({
 	userName: Joi.string().min(1).required(),
 	email: Joi.string().min(1).required(),
 	password: Joi.string().min(1).required(),
-	createdAt: Joi.date().required(),
+	createdAt: Joi.date(),
 	updatedAt: Joi.date().optional().allow(null),
 	isAdmin: Joi.boolean().required(),
 });
