@@ -94,7 +94,7 @@ export function AppSidebar({
 														</AvatarFallback>
 													</Avatar>
 													{channel.isLocked && (
-														<Lock className='h-3 w-3 absolute -right-1 -bottom-1 text-amber-500' />
+														<Lock className='h-4.5 w-4.5 absolute right-4 bottom-0.5 text-red-600 bg-red-100 border-2 border-black-200 rounded-full' />
 													)}
 												</div>
 												<div className='flex items-center gap-1.5'>

@@ -28,15 +28,19 @@ export const getAllChannels = async (
 		logWithLocation(`${res.statusCode}`, "server");
 
 		res.status(200).json(users);
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	} catch (error: any) {
-		logWithLocation(`Error fetching channels: ${error.message}`, "error");
-		res.status(500);
-		logWithLocation(`${res.statusCode}`, "server");
+	} catch (error: unknown) {
+		if (error instanceof Error) {
+			logWithLocation(
+				`Error fetching channels: ${error.message}`,
+				"error"
+			);
+			res.status(500);
+			logWithLocation(`${res.statusCode}`, "server");
 
-		res.status(500).json({
-			message: "Error fetching channels",
-			error: error.message,
-		});
+			res.status(500).json({
+				message: "Error fetching channels",
+				error: error.message,
+			});
+		}
 	}
 };

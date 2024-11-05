@@ -8,6 +8,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "./data/interface/user";
 import { Separator } from "./components/ui/separator";
 import { Message } from "./data/interface/messages";
+import { MessageFeed } from "./components/messageDisplay";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -17,6 +18,7 @@ export default function Layout() {
 		null
 	);
 	const [users, setUsers] = useState<User[]>([]);
+	// const [currentUser, setCurrentUser] = useState<User | null>(null);
 	const [messages, setMessages] = useState<Message[]>([]);
 
 	const fetchChannels = async () => {
@@ -60,6 +62,14 @@ export default function Layout() {
 			console.error("Error fetching messages:", error);
 		}
 	};
+
+	// TODO: implement proper auth check.
+	const hasChannelAccess = (channel: Channel): boolean => {
+		if (!channel.isLocked) return true;
+
+		return false;
+	};
+
 	// init ui
 	useEffect(() => {
 		fetchChannels();
@@ -68,13 +78,16 @@ export default function Layout() {
 
 	// Fetch messages when selected channel
 	useEffect(() => {
-		if (selectedChannel) {
+		if (selectedChannel && hasChannelAccess(selectedChannel)) {
 			fetchMessages(selectedChannel);
 		}
 	}, [selectedChannel]);
 
 	const handleChannelClick = (channel: Channel) => {
 		setSelectedChannel(channel);
+
+		if (!hasChannelAccess(channel)) {
+		}
 	};
 
 	return (
@@ -89,6 +102,9 @@ export default function Layout() {
 
 				{/* Main chat content */}
 				<main className='flex-1 p-6 min-w-0'>
+					{/* Renders the sidebar and displays the selected channel's name and description.
+					If no channel is selected, it prompts the user to select a channel to start chatting.
+					The component consists of conditional rendering based on the 'selectedChannel' state. */}
 					<SidebarTrigger />
 					{selectedChannel ? (
 						<div>
@@ -107,43 +123,20 @@ export default function Layout() {
 					)}
 					<Separator />
 
-					{/* TODO: refactor to component */}
-					<ScrollArea className='h-full p-4'>
-						{messages.map((message) => {
-							const sender = users.find((user) =>
-								user._id.toString()
-							);
-							return (
-								<div
-									key={message._id.toString()}
-									className='flex items-start gap-3'>
-									<Avatar className='h-8 w-8'>
-										<AvatarFallback>
-											{sender?.userName
-												.substring(0, 2)
-												.toUpperCase() || "??"}
-										</AvatarFallback>
-									</Avatar>
-									<div>
-										<div className='flex items-center gap-2'>
-											<span className='font-semibold'>
-												{sender?.userName ||
-													"Unknown User"}
-											</span>
-											<span className='text-xs text-muted-foreground'>
-												{new Date(
-													message.createdAt
-												).toLocaleString()}
-											</span>
-										</div>
-										<p className='mt-1'>
-											{message.content}
-										</p>
-									</div>
-								</div>
-							);
-						})}
-					</ScrollArea>
+					{/* Renders a MessageFeed component with the specified
+					messages, users, and selectedChannel. he hasAccess prop
+					is determined based on the selectedChannel's validity and
+					the user's access rights to that channel. */}
+					<MessageFeed
+						messages={messages}
+						users={users}
+						selectedChannel={selectedChannel}
+						hasAccess={
+							selectedChannel
+								? hasChannelAccess(selectedChannel)
+								: true
+						}
+					/>
 				</main>
 			</SidebarProvider>
 
