@@ -39,6 +39,7 @@ export const login = async (
 			return res.json({ message: "Invalid credentials" });
 		}
 
+		// Compares a provided password with a stored hashed password using bcrypt to determine validity.
 		const isValidPassword = await bcrypt.compare(password, user.password);
 
 		if (!isValidPassword) {
@@ -52,6 +53,8 @@ export const login = async (
 		}
 
 		// gen JWT token
+		// Generates a JSON Web Token (JWT) for the specified user with a validity of 24 hours.
+		// The token includes the user's ID and email, and is signed using the secret specified in the environment variables.
 		const token = jwt.sign(
 			{ userId: user._id.toString(), email: user.email },
 			process.env.JWT_SECRET || "",

@@ -34,6 +34,14 @@ export function MessageFeed({
 		);
 	}
 
+	if (messages.length === 0) {
+		return (
+			<div className='h-[calc(100vh-200px)] flex-col mt-4 items-center justify-center'>
+				<p className='text-slate-400 italic'>No messages.</p>
+			</div>
+		);
+	}
+
 	return (
 		<ScrollArea className='h-full p-4'>
 			{messages.map((message) => {

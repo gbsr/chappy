@@ -13,7 +13,7 @@ import cors from "cors";
 // The `startServer` function connects to the database and starts the server on a specified port,
 // logging success or failure of this operation, and handles errors by closing the client and exiting the process.
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 1338;
 
 // Middleware
 app.use(express.json());

@@ -64,6 +64,7 @@ export const getUserProfile = async (
 			isAdmin: user.isAdmin,
 		};
 
+		// return (safe) user on success
 		logWithLocation(`User profile retrieved: ${userId}`, "success");
 		res.status(200);
 		logWithLocation(`${res.statusCode}`, "server");
