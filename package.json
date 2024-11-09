@@ -3,6 +3,10 @@
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"exports": {
+		"./vite.config.js": "./vite.config.js",
+		"./postcss.config.cjs": "./postcss.config.cjs"
+	},
 	"scripts": {
 		"build": "tsc && vite build",
 		"start": "vite preview --host --port $PORT",
