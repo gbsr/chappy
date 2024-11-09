@@ -1,7 +1,10 @@
 import { logWithLocation } from "../../src/helpers.js";
 import { User } from "../../src/data/interface/user";
+import "dotenv.config";
+// const apiUrl = import.meta.env.VITE_API_URL;
+const apiUrl = process.env.API_URL;
 
-const apiUrl = import.meta.env.VITE_API_URL;
+// const port = process.env.PORT || 1338;
 
 // Defines the shape of authentication headers to be used in requests, including optional Authorization and mandatory Content-Type fields.
 // Also specifies the response structure for fetching a user profile, containing a message and the user's profile information.
