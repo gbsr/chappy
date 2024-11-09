@@ -3,12 +3,12 @@
 	"private": true,
 	"version": "0.0.0",
 	"scripts": {
+        "build": "tsc && vite build",  // For production build
+        "start": "vite preview --host",  // For production start
 		"dev": "vite",
 		"build-frontend": "tsc && vite build --outDir ./frontend",
-		"frontend": "tsc && vite build --outDir ./frontend && vite preview",
 		"start-frontend": "vite preview --port 1338",
 		"lint": "eslint .",
-		"backend": "tsc --project tsconfig.backend.json && node --env-file .env ./dist/backendSrc/server.js",
 		"build-backend": "tsc --project tsconfig.backend.json",
 		"start-backend": "node --env-file .env ./backendSrc/server.js",
 		"server": "tsc --project tsconfig.backend.json && node --env-file .env ./dist/backendSrc/server.js"
