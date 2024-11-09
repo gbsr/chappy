@@ -1,7 +1,7 @@
 import { logWithLocation } from "../../src/helpers.js";
 import { User } from "../../src/data/interface/user";
-import "dotenv.config";
 // const apiUrl = import.meta.env.VITE_API_URL;
+import "dotenv/config";
 const apiUrl = process.env.API_URL;
 
 // const port = process.env.PORT || 1338;
