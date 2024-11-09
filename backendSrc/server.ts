@@ -4,7 +4,7 @@ import { channelRouter } from "./routes/channelRouter.js";
 import { userRouter } from "./routes/userRouter.js";
 import { messageRouter } from "./routes/messageRouter.js";
 import { logWithLocation } from "../src/helpers.js";
-import { connect, client } from "../src/data/dbConnection.js";
+import { connect, client } from "./data/dbConnection.js";
 import cors from "cors";
 
 // This Express.js application sets up a server with middleware for JSON parsing and CORS support.

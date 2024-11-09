@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Hash, Lock } from "lucide-react";
-import { Channel } from "@/data/interface/channels";
+import { Channel } from "shared/interface/channels";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface AppSidebarProps {

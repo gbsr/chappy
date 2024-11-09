@@ -1,9 +1,9 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { User } from "../data/interface/user";
-import { Message } from "../data/interface/messages";
+import { User } from "../../shared/interface/user";
+import { Message } from "../../shared/interface/messages";
 import { AlertTriangle } from "lucide-react";
-import { Channel } from "../data/interface/channels";
+import { Channel } from "../../shared/interface/channels";
 
 interface MessageFeedProps {
 	messages: Message[];

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Collection, ObjectId } from "mongodb";
 import { logWithLocation } from "../../../src/helpers.js";
-import { Channel } from "../../../src/data/interface/channels";
+import { Channel } from "../../../shared/interface/channels";
 
 // TODO: update with log constants
 

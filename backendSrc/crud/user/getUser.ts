@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import { Collection, ObjectId } from "mongodb";
-import { User } from "../../../src/data/interface/user.js";
-import { logWithLocation } from "../../../src/helpers.js";
-import { idSchema } from "../../../src/data/schema.js";
+import { User } from "../../../shared/interface/user.js";
+import { logWithLocation } from "../../../shared/helpers.js";
+import { idSchema } from "../../../shared/schema.js";
 
 /**
  * Retrieves user information from the specified collection based on the user ID

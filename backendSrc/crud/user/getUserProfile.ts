@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { Collection, ObjectId } from "mongodb";
-import { User } from "../../../src/data/interface/user.js";
-import { logWithLocation } from "../../../src/helpers.js";
+import { User } from "../../../shared/interface/user.js";
+import { logWithLocation } from "../../../shared/helpers.js";
 import { AuthRequest } from "../../auth/auth.middleware.js";
 
 /**

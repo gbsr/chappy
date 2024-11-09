@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { Collection, ObjectId } from "mongodb";
 import { logWithLocation } from "../../../src/helpers.js";
 import { channelSchema } from "../../../src/data/schema.js";
-import { Channel } from "../../../src/data/interface/channels.js";
+import { Channel } from "../../../shared/interface/channels.js";
 
 export const updateChannel = async (
 	req: Request,

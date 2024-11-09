@@ -1,13 +1,13 @@
 // App.tsx
 import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { Channel } from "./data/interface/channels";
+import { Channel } from "../shared/interface/channels.js";
 import { AppSidebar } from "./components/app-sidebar";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User } from "./data/interface/user";
+import { User } from "../shared/interface/user.js";
 import { Separator } from "./components/ui/separator";
-import { Message } from "./data/interface/messages";
+import { Message } from "../shared/interface/messages.js";
 import { MessageFeed } from "./components/messageDisplay";
 import { authStore } from "../backendSrc/auth/auth.js";
 

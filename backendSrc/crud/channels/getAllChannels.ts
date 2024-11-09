@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Collection } from "mongodb";
 import { logWithLocation } from "../../../src/helpers.js";
-import { Channel } from "../../../src/data/interface/channels.js";
+import { Channel } from "../../../shared/interface/channels.js";
 
 /**
  *

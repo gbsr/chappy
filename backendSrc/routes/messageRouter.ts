@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import { getChannelMessages } from "../crud/messages/getAllMessages.js";
 import { Collection } from "mongodb";
-import { Message } from "../../src/data/interface/messages.js";
-import { Channel } from "../../src/data/interface/channels.js";
-import { db } from "../../src/data/dbConnection.js";
+import { Message } from "../../shared/interface/messages.js";
+import { Channel } from "../../shared/interface/channels.js";
+import { db } from "../data/dbConnection.js";
 
 const messageRouter = Router();
 let messageCollection: Collection<Message>;

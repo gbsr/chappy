@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
-import { logWithLocation } from "../../../src/helpers.js";
-import { channelSchema } from "../../../src/data/schema.js";
-import { Channel } from "../../../src/data/interface/channels.js";
+import { logWithLocation } from "../../../shared/helpers.js";
+import { channelSchema } from "../../../shared/schema.js";
+import { Channel } from "../../../shared/interface/channels.js";
 import { Request, Response } from "express";
 
 /**

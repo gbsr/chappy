@@ -1,10 +1,10 @@
 import { Router, Request, Response, RequestHandler } from "express";
 import { Collection } from "mongodb";
-import { db } from "../../src/data/dbConnection.js";
+import { db } from "../data/dbConnection.js";
 
 import { AuthRequest, verifyToken } from "../auth/auth.middleware.js";
 
-import { User } from "../../src/data/interface/user.js";
+import { User } from "../../shared/interface/user.js";
 import { login } from "../auth/auth.handler.js";
 import { getAllUsers } from "../crud/user/getAllUsers.js";
 import { getUser } from "../crud/user/getUser.js";

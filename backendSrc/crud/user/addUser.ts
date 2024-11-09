@@ -1,7 +1,7 @@
 import { Collection, ObjectId } from "mongodb";
 import { logWithLocation } from "../../../src/helpers.js";
 import { userSchema } from "../../../src/data/schema.js";
-import { User } from "../../../src/data/interface/user";
+import { User } from "../../../shared/interface/user.js";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 

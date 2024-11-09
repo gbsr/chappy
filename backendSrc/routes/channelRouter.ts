@@ -1,7 +1,7 @@
 import { Router, Request, Response } from "express";
 import { Collection } from "mongodb";
-import { db } from "../../src/data/dbConnection.js";
-import { Channel } from "../../src/data/interface/channels.js";
+import { db } from "../data/dbConnection.js";
+import { Channel } from "../../shared/interface/channels.js";
 import { getAllChannels } from "../crud/channels/getAllChannels.js";
 import { addChannel } from "../crud/channels/addChannel.js";
 import { deleteChannel } from "../crud/channels/deleteChannel.js";
