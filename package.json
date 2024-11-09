@@ -9,7 +9,7 @@
 		"build-frontend": "tsc && vite build",
 		"start-frontend": "vite preview --port 1338",
 		"build-backend": "tsc --project tsconfig.backend.json",
-		"start-backend": "node --env-file .env ./dist/backendSrc/server.js",
+		"start-backend": "node --env-file .env dist/backendSrc/server.js",
 		"lint": "eslint ."
 	},
 	"dependencies": {

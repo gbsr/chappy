@@ -9,7 +9,7 @@ import { User } from "../shared/interface/user.js";
 import { Separator } from "./components/ui/separator";
 import { Message } from "../shared/interface/messages.js";
 import { MessageFeed } from "./components/messageDisplay";
-import { authStore } from "../backendSrc/auth/auth.js";
+import { authStore } from "./authStore.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 

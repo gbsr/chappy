@@ -1,113 +1,86 @@
-import { logWithLocation } from "../../src/helpers.js";
-import { User } from "../../shared/interface/user.js";
-// const apiUrl = import.meta.env.VITE_API_URL;
 import "dotenv/config";
-const apiUrl = process.env.API_URL;
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
+import { logWithLocation } from "../../shared/helpers.js";
+import { User } from "../../shared/interface/user.js";
+import { ObjectId } from "mongodb";
+import { db } from "../data/dbConnection.js";
+import { userSchema } from "../../shared/schema.js";
 
-// const port = process.env.PORT || 1338;
+const jwtSecret = process.env.JWT_SECRET || "";
+const collection = db.collection("users");
 
-// Defines the shape of authentication headers to be used in requests, including optional Authorization and mandatory Content-Type fields.
-// Also specifies the response structure for fetching a user profile, containing a message and the user's profile information.
-type AuthHeaders = {
-	Authorization?: string;
-	"Content-Type": string;
-};
-
-interface ProfileResponse {
-	message: string;
-	profile: User;
+export async function hashPassword(password: string): Promise<string> {
+	const saltRounds = 10;
+	return bcrypt.hash(password, saltRounds);
 }
 
-/**
- * The `authStore` object provides methods for managing authentication tokens
- * in local storage, including storing, retrieving, and clearing tokens, as well as
- * fetching authentication headers and the current user's profile information.
- *
- * Methods:
- *
- * - `storeToken(token: string)`: Stores the provided token in local storage,
- *   logging success or failure based on the operation outcome.
- *
- * - `getToken()`: Retrieves the token from local storage. If successful, logs
- *   the retrieval; if not, logs an error and returns null.
- *
- * - `clearToken()`: Removes the token from local storage, logging the outcome
- *   of the operation and returning a boolean indicating success.
- *
- * - `getAuthHeaders()`: Constructs and returns the headers for authentication.
- *   If a token is present, it adds an Authorization header; otherwise, it returns
- *   only the Content-Type.
- *
- * - `getCurrentUser()`: Fetches the current user's profile from a specified API.
- *   It logs success or failure of the operation and returns the user's profile or
- *   null if the fetch fails.
- *
- * Note: The methods include try/catch blocks to handle potential errors arising
- * from local storage operations and network requests.
- */
-export const authStore = {
-	storeToken: (token: string) => {
-		try {
-			localStorage.setItem("token", token);
-			logWithLocation("Token stored successfully", "success");
-		} catch (error) {
-			logWithLocation("Failed to store token", "error");
-		}
-	},
+export async function comparePasswords(
+	password: string,
+	hash: string
+): Promise<boolean> {
+	return bcrypt.compare(password, hash);
+}
 
-	getToken: () => {
-		try {
-			const token = localStorage.getItem("token");
-			if (!token) {
-				return null;
-			}
-			logWithLocation("Token retrieved", "success");
-			return token;
-		} catch (error) {
-			logWithLocation("Error retrieving token", "error");
+export function generateToken(userId: ObjectId): string {
+	return jwt.sign({ userId: userId.toString() }, jwtSecret, {
+		expiresIn: "24h",
+	});
+}
+
+export function verifyToken(token: string): { userId: string } | null {
+	try {
+		return jwt.verify(token, jwtSecret) as { userId: string };
+	} catch (error) {
+		logWithLocation("Invalid token", "error");
+		return null;
+	}
+}
+
+export async function authenticateUser(
+	userName: string,
+	password: string
+): Promise<{ token: string; user: User } | null> {
+	try {
+		const user = (await collection.findOne({ userName })) as User | null;
+
+		if (!user) {
+			logWithLocation("User not found", "error");
 			return null;
 		}
-	},
 
-	clearToken: () => {
-		try {
-			localStorage.removeItem("token");
-			logWithLocation("Token cleared successfully", "success");
-			return true;
-		} catch (error) {
-			logWithLocation("Failed to clear token", "error");
-			return false;
-		}
-	},
-
-	getAuthHeaders: (): AuthHeaders => {
-		const token = localStorage.getItem("token");
-		if (!token) {
-			return {
-				"Content-Type": "application/json",
-			};
-		}
-		return {
-			Authorization: `Bearer ${token}`,
-			"Content-Type": "application/json",
-		};
-	},
-
-	getCurrentUser: async (): Promise<User | null> => {
-		try {
-			const response = await fetch(`${apiUrl}/api/users/profile`, {
-				headers: authStore.getAuthHeaders(),
-			});
-
-			if (!response.ok) {
-				return null;
-			}
-
-			const data = (await response.json()) as ProfileResponse;
-			return data.profile;
-		} catch (error) {
-			logWithLocation("Failed to get user profile", "error");
+		const isValid = await comparePasswords(password, user.password);
+		if (!isValid) {
+			logWithLocation("Invalid password", "error");
 			return null;
 		}
-	},
-};
+
+		const token = generateToken(user._id);
+		return { token, user };
+	} catch (error) {
+		logWithLocation(`Authentication error: ${error}`, "error");
+		return null;
+	}
+}
+
+export async function validateToken(token: string): Promise<User | null> {
+	const payload = verifyToken(token);
+	if (!payload) return null;
+
+	try {
+		const user = (await collection.findOne({
+			_id: new ObjectId(payload.userId),
+		})) as User | null;
+
+		return user;
+	} catch (error) {
+		logWithLocation(`Token validation error: ${error}`, "error");
+		return null;
+	}
+}
+
+// Validation helper using your existing schema
+export function validateUserInput(userData: Partial<User>): { error?: string } {
+	const { error } = userSchema.validate(userData);
+	return { error: error?.details[0]?.message };
+}
