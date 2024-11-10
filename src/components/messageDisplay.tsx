@@ -43,7 +43,7 @@ export function MessageFeed({
 	}
 
 	return (
-		<ScrollArea className='h-full p-4'>
+		<ScrollArea className='flex-1 p-4 mb-16'>
 			{messages.map((message) => {
 				const sender = users.find(
 					(user) => user._id.toString() === message.userId.toString()
