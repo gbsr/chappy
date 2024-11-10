@@ -2,6 +2,7 @@
 	"name": "09-fullstack-mern",
 	"private": true,
 	"version": "0.0.0",
+	"type": "module",
 	"exports": {
 		"./vite.config.js": "./vite.config.js",
 		"./postcss.config.cjs": "./postcss.config.cjs"
