@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cors());
 
 // Serve static files from the "frontend" directory using Express.
-app.use(express.static("./frontend"));
+app.use(express.static("dist"));
 
 // Sets up a route handler for GET requests to the root URL ("/")
 // that sends the "index.html" file from the "./frontend" directory.
@@ -37,9 +37,9 @@ app.get("/", (req, res) => {
 
 // Routes
 // maybe this works with render because I don't even know but it god damn refuses to run and I want to nuke the entire site
-app.get("/", (_req, res) => {
-	res.status(200).send("Server is running");
-});
+// app.get("/", (_req, res) => {
+// 	res.status(200).send("Server is running");
+// });
 
 app.get("/api", (_req, res) => {
 	res.status(200);
@@ -50,6 +50,10 @@ app.get("/api", (_req, res) => {
 app.use("/api/channels", channelRouter);
 app.use("/api/users", userRouter);
 app.use("/api", messageRouter);
+
+app.get("*", (req, res) => {
+	res.sendFile("index.html", { root: "dist" });
+});
 
 /**
  * Initializes and starts the server by establishing a connection.
