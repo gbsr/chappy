@@ -36,6 +36,11 @@ app.get("/", (req, res) => {
 */
 
 // Routes
+// maybe this works with render because I don't even know but it god damn refuses to run and I want to nuke the entire site
+app.get("/", (_req, res) => {
+	res.status(200).send("Server is running");
+});
+
 app.get("/api", (_req, res) => {
 	res.status(200);
 	res.status(200).send("Server is running");
