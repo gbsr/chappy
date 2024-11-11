@@ -4,6 +4,7 @@ import { Collection } from "mongodb";
 import { Message } from "../../shared/interface/messages.js";
 import { Channel } from "../../shared/interface/channels.js";
 import { db } from "../data/dbConnection.js";
+import { sendMessage } from "../crud/messages/addMessage.js";
 
 const messageRouter = Router();
 let messageCollection: Collection<Message>;
@@ -28,5 +29,10 @@ messageRouter.get(
 		);
 	}
 );
+
+messageRouter.post("/", async (req: Request, res: Response) => {
+	console.log("Received message request body:", req.body);
+	await sendMessage(req, res, messageCollection);
+});
 
 export { messageRouter };

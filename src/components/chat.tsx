@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { Channel } from "../../shared/interface/channels.js";
 import { AppSidebar } from "../components/app-sidebar";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { User } from "../../shared/interface/user.js";
 import { Separator } from "../components/ui/separator";
 import { Message } from "../../shared/interface/messages.js";
 import { MessageFeed } from "../components/messageDisplay";
 import { authStore } from "../authStore.js";
 import { MessageBox } from "./messageBox.js";
+import { MemberList } from "./memberList.js";
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -62,7 +61,7 @@ export function ChatLayout() {
 
 	const fetchMessages = async (channel: Channel) => {
 		const channelIdString = channel._id.toString();
-		const url = `${apiUrl}/api/channels/${channelIdString}/messages`;
+		const url = `${apiUrl}/api/messages/channels/${channelIdString}/messages`;
 		try {
 			const hasAccess = await hasChannelAccess(channel);
 			if (!hasAccess) {
@@ -196,6 +195,76 @@ export function ChatLayout() {
 		setSelectedChannel(channel);
 	};
 
+	const handleSendMessage = async (userId: string, message: string) => {
+		try {
+			const currentUser = await authStore.getCurrentUser();
+
+			const response = await fetch(`${apiUrl}/api/messages`, {
+				method: "POST",
+				headers: {
+					...authStore.getAuthHeaders(),
+				},
+				body: JSON.stringify({
+					content: message,
+					userId: currentUser?._id,
+					recipientId: userId,
+					channelId: null,
+					taggedUsers: [],
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			console.log("Message sent successfully:", data);
+		} catch (error) {
+			console.error("Failed to send message:", error);
+		}
+	};
+
+	const handleMessageSubmit = async (message: string) => {
+		try {
+			const currentUser = await authStore.getCurrentUser();
+
+			// Only send if we have a selected channel
+			if (!selectedChannel) return;
+
+			const response = await fetch(`${apiUrl}/api/messages`, {
+				method: "POST",
+				headers: {
+					...authStore.getAuthHeaders(),
+				},
+				body: JSON.stringify({
+					content: message,
+					userId: currentUser?._id,
+					recipientId: null, // null for channel messages
+					channelId: selectedChannel._id,
+					taggedUsers: [],
+					createdAt: new Date(),
+					updatedAt: new Date(),
+				}),
+			});
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			console.log("Channel message sent successfully:", data);
+
+			// Optionally refresh messages
+			if (selectedChannel) {
+				fetchMessages(selectedChannel);
+			}
+		} catch (error) {
+			console.error("Failed to send channel message:", error);
+		}
+	};
+
 	return (
 		<div className='flex-col'>
 			<div className='flex bg-background'>
@@ -208,7 +277,6 @@ export function ChatLayout() {
 					/>
 
 					<div className='relative flex-1 flex flex-col min-w-0'>
-						{" "}
 						<main className='flex-1 p-6'>
 							<SidebarTrigger />
 							{selectedChannel ? (
@@ -236,7 +304,9 @@ export function ChatLayout() {
 						</main>
 						<div className='sticky bottom-0 left-0 right-0 z-50 bg-background border-t'>
 							<div className='p-4'>
-								<MessageBox />
+								<MessageBox
+									onMessageSubmit={handleMessageSubmit}
+								/>
 							</div>
 						</div>
 					</div>
@@ -245,36 +315,11 @@ export function ChatLayout() {
 				{/* Right sidebar */}
 				{/* TODO: Refactor to component */}
 
-				<div className='w-64 border-l border-sidebar-border bg-sidebar p-4'>
-					<div className='duration-200 flex h-8 shrink-0 items-center rounded-md px-2 font-medium'>
-						Members ({selectedChannel?.members.length || 0})
-					</div>
-					<ScrollArea className='h-[300px]'>
-						<div className='space-y-2 text-bg-slate-100'>
-							{selectedChannel?.members.map((userId) => {
-								const user = users.find(
-									(user) => user._id.toString() === userId
-								);
-								return (
-									<div
-										key={userId}
-										className='flex items-center text-base text-bg-slate-100 hover:bg-sidebar-accent data-[active=true]:bg-indigo-100 data-[active=true]:text-indigo-900 transition-colors'>
-										<Avatar className='h-7 w-7 indigo-900'>
-											<AvatarFallback className='p-2 indigo-900'>
-												{(user?.userName || "")
-													.substring(0, 2)
-													.toUpperCase()}
-											</AvatarFallback>
-										</Avatar>
-										<span className='truncate text-sm ml-2'>
-											{user?.userName || "Unknown User"}
-										</span>
-									</div>
-								);
-							})}
-						</div>
-					</ScrollArea>
-				</div>
+				<MemberList
+					selectedChannel={selectedChannel}
+					users={users}
+					onSendMessage={handleSendMessage}
+				/>
 			</div>
 		</div>
 	);

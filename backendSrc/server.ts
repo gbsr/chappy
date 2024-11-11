@@ -49,7 +49,7 @@ app.get("/api", (_req, res) => {
 
 app.use("/api/channels", channelRouter);
 app.use("/api/users", userRouter);
-app.use("/api", messageRouter);
+app.use("/api/messages", messageRouter);
 
 app.get("*", (req, res) => {
 	res.sendFile("index.html", { root: "dist" });

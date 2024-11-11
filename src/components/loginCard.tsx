@@ -41,6 +41,23 @@ export function LoginPage() {
 			const endpoint = isRegistering
 				? "/api/users/add"
 				: "/api/users/login";
+			console.log("Sending request to:", `${apiUrl}${endpoint}`);
+			console.log(
+				"Request body:",
+				JSON.stringify(
+					{
+						email: userEmail,
+						userName: userName,
+						password: password,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+						isAdmin: false,
+					},
+					null,
+					2
+				)
+			);
+
 			const response = await fetch(`${apiUrl}${endpoint}`, {
 				method: "POST",
 				headers: {
@@ -52,7 +69,8 @@ export function LoginPage() {
 								email: userEmail,
 								userName: userName,
 								password: password,
-								createdAt: Date.now(),
+								createdAt: new Date(),
+								updatedAt: new Date(),
 								isAdmin: false,
 						  }
 						: {
@@ -67,16 +85,16 @@ export function LoginPage() {
 
 			if (response.ok) {
 				if (isRegistering) {
-					// After successful registration, switch back to login
 					setIsRegistering(false);
 					setPassword("");
 				} else {
-					// Login success
 					authStore.storeToken(data.token);
 					navigate("/chat");
 				}
 			} else {
 				console.error(
+					// TODO: update frontend to tell user that the registration failed because user already exists
+
 					isRegistering ? "Registration failed" : "Login failed"
 				);
 			}

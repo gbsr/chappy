@@ -1,6 +1,6 @@
 import { Collection, ObjectId } from "mongodb";
 import { logWithLocation } from "../../../src/helpers.js";
-import { userSchema } from "../../../src/data/schema.js";
+import { userSchema } from "../../../shared/schema.js";
 import { User } from "../../../shared/interface/user.js";
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";

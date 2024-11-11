@@ -1,7 +1,10 @@
-// modified from Uiverse.io by vinodjangid07
 import { useState } from "react";
 
-export const MessageBox = () => {
+interface MessageBoxProps {
+	onMessageSubmit: (message: string) => void;
+}
+
+export const MessageBox: React.FC<MessageBoxProps> = ({ onMessageSubmit }) => {
 	const [message, setMessage] = useState("");
 	const [file, setFile] = useState(null);
 
@@ -11,8 +14,7 @@ export const MessageBox = () => {
 
 	const handleSubmit = () => {
 		if (message.trim() || file) {
-			console.log("Message:", message);
-			console.log("File:", file);
+			onMessageSubmit(message);
 			// Reset form
 			setMessage("");
 			setFile(null);
@@ -27,7 +29,6 @@ export const MessageBox = () => {
 						htmlFor='file'
 						className='cursor-pointer block'></label>
 				</div>
-
 				<input
 					required
 					placeholder='Message...'
@@ -36,7 +37,6 @@ export const MessageBox = () => {
 					onChange={handleMessageChange}
 					className='flex-1 p-2 border-none outline-none bg-transparent text-gray-800 placeholder-gray-400 truncate w-full'
 				/>
-
 				<button
 					onClick={handleSubmit}
 					className='p-2 hover:bg-gray-100 rounded-full transition-colors'>
