@@ -12,7 +12,7 @@
 		"start": "vite preview --host --port $PORT",
 		"dev": "vite",
 		"build-frontend": "tsc && vite build",
-		"start-frontend": "vite preview --outDir dist/frontend",
+		"start-frontend": "vite preview --outDir dist/",
 		"build-backend": "tsc --project tsconfig.backend.json",
 		"start-backend": "node --env-file .env dist/backend/backendSrc/server.js",
 		"lint": "eslint ."

@@ -16,7 +16,11 @@ import { MessageBox } from "./messageBox.js";
 interface MemberListProps {
 	selectedChannel: Channel | null;
 	users: User[];
-	onSendMessage: (userId: string, message: string) => Promise<void>;
+	onSendMessage: (
+		message: string,
+		targetId: string,
+		isDM: boolean
+	) => Promise<void>;
 }
 
 export const MemberList: React.FC<MemberListProps> = ({
@@ -37,7 +41,7 @@ export const MemberList: React.FC<MemberListProps> = ({
 	const handleMessageBoxSubmit = useCallback(
 		(message: string) => {
 			if (selectedUser && message) {
-				onSendMessage(selectedUser._id.toString(), message);
+				onSendMessage(message, selectedUser._id.toString(), true);
 				setIsDialogOpen(false);
 			}
 		},
@@ -51,43 +55,39 @@ export const MemberList: React.FC<MemberListProps> = ({
 			</div>
 			<ScrollArea className='h-[300px]'>
 				<div className='space-y-2 text-bg-slate-100'>
-					{selectedChannel?.members?.map(
-						(userId: string | undefined) => {
-							const user = users.find(
-								(user: { _id: ObjectId }) =>
-									user._id.toString() === userId
-							);
-							return (
-								<div
-									key={userId}
-									onClick={() => handleUserClick(user)}
-									className='flex items-center p-2 text-base text-bg-slate-100 hover:bg-sidebar-accent data-[active=true]:bg-indigo-100 data-[active=true]:text-indigo-900 transition-colors rounded-md cursor-pointer'>
-									<Avatar className='h-7 w-7'>
-										<AvatarFallback className='p-2 bg-indigo-900 text-white'>
-											{(user?.userName || "")
-												.substring(0, 2)
-												.toUpperCase()}
-										</AvatarFallback>
-									</Avatar>
-									<span className='truncate text-sm ml-2'>
-										{user?.userName || "Unknown User"}
-									</span>
-									<MessageSquare className='ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity' />
-								</div>
-							);
-						}
-					)}
+					{selectedChannel?.members?.map((userId: string | undefined) => {
+						const user = users.find(
+							(user: { _id: ObjectId }) => user._id.toString() === userId
+						);
+						return (
+							<div
+								key={userId}
+								onClick={() => handleUserClick(user)}
+								className='flex items-center p-2 text-base text-bg-slate-100 hover:bg-sidebar-accent data-[active=true]:bg-indigo-100 data-[active=true]:text-indigo-900 transition-colors rounded-md cursor-pointer'>
+								<Avatar className='h-7 w-7'>
+									<AvatarFallback className='p-2 bg-indigo-900 text-white'>
+										{(user?.userName || "").substring(0, 2).toUpperCase()}
+									</AvatarFallback>
+								</Avatar>
+								<span className='truncate text-sm ml-2'>
+									{user?.userName || "Unknown User"}
+								</span>
+								<MessageSquare className='ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity' />
+							</div>
+						);
+					})}
 				</div>
 			</ScrollArea>
 			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 				<DialogContent className='sm:max-w-md'>
 					<DialogHeader>
-						<DialogTitle>
-							Send Message to {selectedUser?.userName}
-						</DialogTitle>
+						<DialogTitle>Send Message to {selectedUser?.userName}</DialogTitle>
 					</DialogHeader>
 					<div className='flex flex-col space-y-4'>
-						<MessageBox onMessageSubmit={handleMessageBoxSubmit} />
+						<MessageBox
+							onMessageSubmit={handleMessageBoxSubmit}
+							selectedDMUser={selectedUser} // For DM dialog
+						/>
 					</div>
 				</DialogContent>
 			</Dialog>

@@ -13,11 +13,18 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Hash, Lock } from "lucide-react";
 import { Channel } from "shared/interface/channels";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useEffect, useState } from "react";
+import { User } from "shared/interface/user";
+import { authStore } from "../../src/authStore.js";
+import { Message } from "shared/interface/messages.js";
 
 interface AppSidebarProps {
 	channels: Channel[];
 	onChannelClick: (channel: Channel) => void;
+	onDirectMessageClick: (user: User) => void;
 	selectedChannel: Channel | null;
+	directMessages: Message[];
+	users: User[];
 }
 
 // Helper function to get channel avatar fallback
@@ -48,16 +55,29 @@ export function AppSidebar({
 	channels,
 	onChannelClick,
 	selectedChannel,
+	directMessages,
+	users,
+	onDirectMessageClick,
 }: AppSidebarProps) {
+	const [currentUser, setCurrentUser] = useState<User | null>(null);
+
+	useEffect(() => {
+		const getCurrentUser = async () => {
+			const user = await authStore.getCurrentUser();
+			setCurrentUser(user);
+		};
+		getCurrentUser();
+	}, []);
+
 	return (
 		<Sidebar>
-			<SidebarContent>
-				<SidebarGroup>
+			<SidebarContent className='h-screen flex flex-col>'>
+				<SidebarGroup className='flex-1'>
 					<SidebarGroupLabel className='text-lg text-black-500'>
 						Channels
 					</SidebarGroupLabel>
 					<SidebarGroupContent>
-						<ScrollArea className='h-[300px]'>
+						<ScrollArea className='h-full'>
 							<SidebarMenu>
 								{/* 								
 								Renders a list of sidebar menu items for different channels.
@@ -110,6 +130,72 @@ export function AppSidebar({
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 								))}
+							</SidebarMenu>
+						</ScrollArea>
+					</SidebarGroupContent>
+				</SidebarGroup>
+
+				{/* * Renders a sidebar group for direct messages. 
+				It displays a scrollable list of sidebar menu items for each direct message where the channelId is null.
+				 Each item shows the avatar and username of the other user in the direct message, and clicking on the item triggers the `onDirectMessageClick` function with the selected user as an argument.
+				
+				This component filters messages to include only those with no associated channel (i.e., direct messages).
+				It also handles the case where the other user might not exist in the users list, returning null in such cases. 
+                */}
+				<SidebarGroup className='flex-1'>
+					<SidebarGroupLabel className='text-lg text-black-500'>
+						Direct Messages
+					</SidebarGroupLabel>
+					<SidebarGroupContent>
+						<ScrollArea className='h-full'>
+							<SidebarMenu>
+								{Array.from(
+									new Set(
+										directMessages
+											.filter(
+												(msg) => msg.channelId === null
+											)
+											.map((message) => {
+												const otherUserId =
+													message.userId ===
+													currentUser?._id
+														? message.recipientId
+														: message.userId;
+												return otherUserId?.toString();
+											})
+									)
+								).map((userId) => {
+									const otherUser = users.find(
+										(u) => u._id.toString() === userId
+									);
+									if (!otherUser) return null;
+
+									return (
+										<SidebarMenuItem
+											key={otherUser._id.toString()}>
+											<SidebarMenuButton
+												onClick={() =>
+													onDirectMessageClick(
+														otherUser
+													)
+												}
+												className='w-full text-bg-slate-100 hover:bg-sidebar-accent data-[active=true]:bg-indigo-100 data-[active=true]:text-indigo-900 transition-colors'>
+												<div className='flex items-center gap-2'>
+													<Avatar className='h-7 w-7'>
+														<AvatarFallback>
+															{otherUser.userName
+																.substring(0, 2)
+																.toUpperCase()}
+														</AvatarFallback>
+													</Avatar>
+													<span className='truncate max-w-[150px]'>
+														{otherUser.userName}
+													</span>
+												</div>
+											</SidebarMenuButton>
+										</SidebarMenuItem>
+									);
+								})}
 							</SidebarMenu>
 						</ScrollArea>
 					</SidebarGroupContent>
