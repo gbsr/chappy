@@ -70,8 +70,10 @@ messageRouter.get(
 				.toArray();
 			res.setHeader("Content-Type", "application/json");
 			res.json(messages);
-		} catch (error) {
-			res.status(500).json({ error: "Failed to fetch direct messages" });
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				res.status(500).json({ error: "Failed to fetch direct messages" });
+			}
 		}
 	}) as ExpressRequestHandler
 );
@@ -95,8 +97,10 @@ messageRouter.get(
 				.toArray();
 			res.setHeader("Content-Type", "application/json");
 			res.json(messages);
-		} catch (error) {
-			res.status(500).json({ error: "Failed to fetch direct messages" });
+		} catch (error: unknown) {
+			if (error instanceof Error) {
+				res.status(500).json({ error: "Failed to fetch direct messages" });
+			}
 		}
 	}) as ExpressRequestHandler
 );

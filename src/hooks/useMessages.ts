@@ -1,4 +1,4 @@
-import react from "react";
+import react, { useEffect, useCallback } from "react";
 import { Message } from "../../shared/interface/messages";
 import { Channel } from "../../shared/interface/channels";
 import { User } from "../../shared/interface/user";
@@ -14,35 +14,34 @@ export const useMessages = (
 	const [channelMessages, setChannelMessages] = react.useState<Message[]>([]);
 	const [directMessages, setDirectMessages] = react.useState<Message[]>([]);
 
-	const fetchMessages = async (channel: Channel) => {
-		if (!hasAccess) {
-			setChannelMessages([]);
-			return;
-		}
-
-		const channelIdString = channel._id.toString();
-		const url = `${apiUrl}/api/messages/channels/${channelIdString}/messages`;
-
-		try {
-			const headers = {
-				...authStore.getAuthHeaders(),
-			} as Record<string, string>;
-
-			const response = await fetch(url, { headers });
-			if (!response.ok) {
-				throw new Error(`HTTP error! status: ${response.status}`);
+	const fetchMessages = useCallback(
+		async (channel: Channel) => {
+			if (!hasAccess) {
+				setChannelMessages([]);
+				return;
 			}
-
-			const data = await response.json();
-			setChannelMessages(data);
-		} catch (error: unknown) {
-			if (error instanceof Error) {
-				console.log(`Error fetching messages: ${error.message}`);
+			const channelIdString = channel._id.toString();
+			const url = `${apiUrl}/api/messages/channels/${channelIdString}/messages`;
+			try {
+				const headers = {
+					...authStore.getAuthHeaders(),
+				} as Record<string, string>;
+				const response = await fetch(url, { headers });
+				if (!response.ok) {
+					throw new Error(`HTTP error! status: ${response.status}`);
+				}
+				const data = await response.json();
+				setChannelMessages(data);
+			} catch (error: unknown) {
+				if (error instanceof Error) {
+					console.log(`Error fetching messages: ${error.message}`);
+				}
 			}
-		}
-	};
+		},
+		[hasAccess, setChannelMessages]
+	);
 
-	const fetchAllDirectMessages = async () => {
+	const fetchAllDirectMessages = useCallback(async () => {
 		try {
 			const response = await fetch(`${apiUrl}/api/messages/direct/all`, {
 				headers: {
@@ -56,8 +55,20 @@ export const useMessages = (
 		} catch (error) {
 			console.error("Error fetching direct messages:", error);
 		}
-	};
+	}, [setDirectMessages]);
 
+	/**
+	 * Handles sending a message to a specified user or channel.
+	 * This function constructs a message payload and sends it to the server via a POST request.
+	 *
+	 * @param {string} message - The content of the message to be sent.
+	 * @param {string} targetId - The ID of the recipient or channel where the message will be sent.
+	 * @param {boolean} isDM - A flag indicating whether the message is a direct message (DM) or not.
+	 *
+	 * If the request to send the message fails, an error is logged to the console.
+	 * After sending the message, it refreshes messages either by fetching all direct messages
+	 * if it's a DM or by fetching messages for the selected channel if applicable.
+	 */
 	const handleSendMessage = async (
 		message: string,
 		targetId: string,
@@ -65,7 +76,6 @@ export const useMessages = (
 	) => {
 		try {
 			const currentUser = await authStore.getCurrentUser();
-
 			const bodyData = {
 				content: message,
 				userId: currentUser?._id,
@@ -75,7 +85,6 @@ export const useMessages = (
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			};
-
 			const response = await fetch(`${apiUrl}/api/messages`, {
 				method: "POST",
 				headers: {
@@ -83,11 +92,9 @@ export const useMessages = (
 				},
 				body: JSON.stringify(bodyData),
 			});
-
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-
 			// Refresh messages after sending
 			if (isDM) {
 				await fetchAllDirectMessages();
@@ -99,18 +106,23 @@ export const useMessages = (
 		}
 	};
 
+	useEffect(() => {
+		fetchAllDirectMessages();
+	}, [fetchAllDirectMessages]);
+
 	// Poll for new messages
-	react.useEffect(() => {
+	useEffect(() => {
 		const messageUpdateInterval = setInterval(() => {
 			if (selectedChannel && hasAccess) {
 				fetchMessages(selectedChannel);
-			} else if (selectedDMUser) {
-				fetchAllDirectMessages();
 			}
 		}, 250);
 
+		fetchAllDirectMessages();
+
+		// Cleanup
 		return () => clearInterval(messageUpdateInterval);
-	}, [selectedChannel, selectedDMUser, hasAccess, fetchMessages]);
+	}, [fetchMessages, fetchAllDirectMessages, selectedChannel, hasAccess]);
 
 	return {
 		channelMessages,
