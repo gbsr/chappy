@@ -9,7 +9,7 @@
 	},
 	"scripts": {
 		"build": "tsc && vite build",
-		"start": "vite preview --host --port $PORT",
+		"start": "vite preview --outDir dist/",
 		"dev": "vite",
 		"build-frontend": "tsc && vite build",
 		"start-frontend": "vite preview --outDir dist/",
