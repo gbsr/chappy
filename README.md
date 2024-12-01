@@ -3,6 +3,8 @@
 Chappy is a modern, full-stack chat application built with TypeScript, React, Express, and MongoDB. It features real-time messaging, user authentication, and channel-based communication.
 
 > ⚠️ **Note**: This project is currently in active development. Some features are still being implemented and bugs should be expected.
+>
+> Note that the connection string, jwt token and user password are invalidated, edit these with your own
 
 ## Features
 
@@ -49,26 +51,43 @@ npm install
 3. Create a `.env` file in the root directory with the following variables:
 
 ```env
-PORT=1338
 CONNECTION_STRING=your_mongodb_connection_string
 MONGODB_DB_NAME=your_database_name
 JWT_SECRET=your_jwt_secret
+VITE_API_URL=http://localhost:1338
+
+# Optional: Override the default backend port (1338)
+# PORT=1338
 ```
 
-## Development
+## Running Locally
 
-Run the development server:
+### Development Mode
+
+1. Start the frontend development server:
 
 ```bash
-# Run frontend development server
 npm run dev
+```
 
-# Run backend development server
+2. In a separate terminal, build and start the backend:
+
+```bash
+# Build the backend
 npm run build-backend
+
+# Start the backend server
 npm run start-backend
 ```
 
-## Production Build
+The application will be available at:
+
+-   Frontend: http://localhost:5173 (or the port shown in your terminal)
+-   Backend API: http://localhost:1338
+
+### Production Build
+
+1. Build both frontend and backend:
 
 ```bash
 # Build frontend
@@ -76,10 +95,19 @@ npm run build-frontend
 
 # Build backend
 npm run build-backend
-
-# Start the production server
-npm start
 ```
+
+2. Start the servers:
+
+```bash
+# Start frontend
+npm run start-frontend
+
+# In a separate terminal, start backend
+npm run start-backend
+```
+
+Note: The frontend will be served from the `dist` directory, and the backend requires the `.env` file with proper environment variables.
 
 ## API Documentation
 
